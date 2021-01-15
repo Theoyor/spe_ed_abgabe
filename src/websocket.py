@@ -12,22 +12,29 @@ async def play():
     key = "NMZ3XQEFLKBUP2434UFJONU4QCGTACGEHOWATQWHS7L4PDL5CGXZZGYX"
 
     async with websockets.connect(f"{url}?key={key}") as websocket:
+        f = open('data.json', 'w+')
+        f.write('{"game":[{"0":"dummy"}')
+        f.close()
         print("Waiting for initial state...", flush=True)
         while True:
+            rd = 0
             state_json = await websocket.recv()
             state = json.loads(state_json)
-            print("<", state)
+            with open('data.json', 'a') as f:
+                f.write(',')
+                f.write(json.dumps(state))
+
+            #print("<", state)
             own_player = state["players"][str(state["you"])]
             if not state["running"] or not own_player["active"]:
                 break
-            valid_actions = ["turn_left", "turn_right", "change_nothing"]
-            if own_player["speed"] < 10:
-                valid_actions += ["speed_up"]
-            if own_player["speed"] > 1:
-                valid_actions += ["slow_down"]
-            action = random.choice(valid_actions)
+            action = start_rek(state, rd)
             print(">", action)
             action_json = json.dumps({"action": action})
             await websocket.send(action_json)
+            rd += 1
+        f = open('data.json', 'a')
+        f.write(']}')
+        f.close()
 
 asyncio.get_event_loop().run_until_complete(play())
