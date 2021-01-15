@@ -16,7 +16,7 @@ use json::parse;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn accept( rows: Vec<i64>, cols: Vec<i64>, turn: i8, max_player:usize, players:String, width: usize, height: usize) -> PyResult<i8> {
+fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players:String, width: usize, height: usize) -> PyResult<i8> {
     let parsed =  parse(&players).unwrap();
     let pl = Player{
         id : 6,

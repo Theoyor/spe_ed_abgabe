@@ -38,6 +38,7 @@ def jsonToGameState(dictio, turn):
                 dic["cells"][a][b] = 1
     b = ArrayToInt(dic["cells"],dictio["height"],dictio["width"])
     # statt return rust function aufrufen mit den return werten als argumenten
+    
     ret = spe_ed_lib.accept(b[1],b[0],turn,dictio["you"],json.dumps(plays),dictio["width"],dictio["height"])
     stop = timeit.default_timer()
     time = stop-start

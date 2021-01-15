@@ -29,8 +29,8 @@ pub mod base{
 
     #[derive(Clone)]
     pub struct  State{
-        pub rows :  Vec<i64>,
-        pub cols :  Vec<i64>,
+        pub rows :  Vec<i128>,
+        pub cols :  Vec<i128>,
         pub turn : i8,
         pub max_player : usize,
         pub players : [Player;6],
@@ -88,8 +88,8 @@ pub mod base{
                     
                     for i in (sub_lim(y, speed))..(y) {
                         if *wanted_col >> i & 1 == 0 {
-                            *wanted_col |= 2 ^ i as i64;
-                            rows[i] |= 2 ^ x as i64;
+                            *wanted_col |= 2 ^ i as i128;
+                            rows[i] |= 2 ^ x as i128;
                         } else {
                             active = false;
                         }
@@ -105,8 +105,8 @@ pub mod base{
                     }
                     for i in (x + 1)..(x + 1 + speed) {
                         if *wanted_row >> i & 1 == 0 {
-                            *wanted_row |= 2 ^ i as i64;
-                            cols[i] |= 2 ^ y as i64;
+                            *wanted_row |= 2 ^ i as i128;
+                            cols[i] |= 2 ^ y as i128;
                         } else {
                             active = false;
                         }
@@ -121,8 +121,8 @@ pub mod base{
                     }
                     for i in (y + 1)..(y + 1 + speed) {
                         if *wanted_col >> i & 1 == 0 {
-                            *wanted_col |= 2 ^ i as i64;
-                            rows[i] |= 2 ^ x as i64;
+                            *wanted_col |= 2 ^ i as i128;
+                            rows[i] |= 2 ^ x as i128;
                         } else {
                             active = false;
                         }
@@ -136,8 +136,8 @@ pub mod base{
 
                         for i in (sub_lim(x,  speed))..(x) {
                             if *wanted_row >> i & 1 == 0 {
-                                *wanted_row |= 2 ^ i as i64;
-                                cols[i] |= 2 ^ y as i64;
+                                *wanted_row |= 2 ^ i as i128;
+                                cols[i] |= 2 ^ y as i128;
                             } else {
                                 active = false;
                             }
@@ -170,15 +170,15 @@ pub mod base{
 
                 if f1 != f2 {
                     if rows[f1.1] >> f1.0 & 1 == 0 {
-                        rows[f1.1] |= 2 ^ f1.0 as i64;
-                        cols[f1.0] |= 2 ^ f1.1 as i64;
+                        rows[f1.1] |= 2 ^ f1.0 as i128;
+                        cols[f1.0] |= 2 ^ f1.1 as i128;
                     } else {
                         active = false
                     }
                 }
                 if rows[y] >> x & 1 == 0 {
-                    rows[y] |= 2 ^ x as i64;
-                    cols[x] |= 2 ^ y as i64;
+                    rows[y] |= 2 ^ x as i128;
+                    cols[x] |= 2 ^ y as i128;
                 } else {
                     active = false
                 }
