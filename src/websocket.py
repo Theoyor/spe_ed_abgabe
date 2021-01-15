@@ -19,9 +19,10 @@ async def play():
        # f.close()
         print("Waiting for initial state...", flush=True)
         serv_time = requests.get('https://msoll.de/spe_ed_time')
-        print(serv_time)
+        print(serv_time.content)
         while True:
             rd = 0
+            print("---------round:",rd,"----------")
             state_json = await websocket.recv()
             state = json.loads(state_json)
             #with open('data.json', 'a') as f:

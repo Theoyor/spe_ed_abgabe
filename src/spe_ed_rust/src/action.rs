@@ -8,7 +8,8 @@ pub mod action{
 
     pub fn iter_depth(max_player: usize, game_state: State, return_time: i64) ->i8{
         let mut move_to_make = 0;
-        for i in 12..13 { //Maximum aufheben
+        println!("rows:{},cols:{}",game_state.rows.len(),game_state.cols.len());
+        for i in 7..8 { //Maximum aufheben
             
             match start(max_player, i, game_state.clone(), return_time) {
                 Ok(value) => { move_to_make = value;},
@@ -69,7 +70,7 @@ pub mod action{
             return Ok(1000);
         }
         if depth == 0{
-            return Ok(game_state.spielstands_bewertung(min_player));
+            return Ok(game_state.spielstands_bewertung(max_player, min_player));
         }
         //let g = 0.7*(*return_time as f64);
         /*if SystemTime::now().duration_since(UNIX_EPOCH).expect("omg").as_millis()>(g as u128){

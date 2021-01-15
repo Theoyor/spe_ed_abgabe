@@ -1,6 +1,7 @@
 //!Deadline Global
 
 pub mod base{
+    use std::cmp;
     use std::usize;
     use rand::Rng;
     
@@ -41,19 +42,55 @@ pub mod base{
 
     impl State {
 
-        pub fn spielstands_bewertung(&self, id:usize)->i16 {
-            return 1;
+        pub fn spielstands_bewertung(&self, max_player:usize, min_player:usize)->i16 {
+            let e = self.nearbyFields(min_player)-self.nearbyFields(max_player);
+            return e;
+        }
+
+        pub fn nearbyFields(&self, id:usize)->i16 {
+            let width = self.width as i8;
+            let heigth = self.height as i8;
+            let rows = &self.rows;
+            let x = self.players[id-1].x as i8;
+            let y = self.players[id-1].y as i8;
+            let r = 10;
+            let mut counter = 0;
+            let mut mask = 0;
+             if x+r < width {
+                mask = (1 << (2 * r + 1)) - 1;
+            }else{
+                mask = (1 << (width-(x-r))) - 1;
+             }
+            if y-r < 0{
+                counter += (-y+r)*(1+r+r);
+            }
+            if y+r >= heigth{
+                counter += (y+r+1-heigth)*(1+r+r);
+            }
+            let shift = cmp::max(0,width-(x+r+1));
+            let p = cmp::min(heigth,y+r+r) as usize;
+            let t = cmp::max(y-r,0) as usize;
+            for i in t..p{
+                if (x-r) < 0 {
+                        counter += x-r;
+                }
+                if (x+r)>= width{
+                    counter += (x+r+1-heigth);
+                }
+                counter += (((rows[i] >> shift  & mask)as i128).count_ones() as i8);
+            }
+            return counter as i16;
         }
 
         pub fn update_gameboard(&self, mov: i8, id: usize) -> State {
+            //return self.clone();
             //mov: change_nothing = 0, speed_up = 1, slow down = 2, turn_right = 3, turn_left = 4
-
             let mut direction = self.players[id - 1].direction;
             let mut speed = self.players[id - 1].speed;
             let mut x = self.players[id - 1].x;
             let mut y = self.players[id - 1].y;
             let mut active = self.players[id - 1].active;
-            let mut cols = self.rows.to_vec();
+            let mut cols = self.cols.to_vec();
             let mut rows = self.rows.to_vec();
 
             if (direction == 3 && mov == 3) || (direction == 1 && mov == 4) {
@@ -79,14 +116,13 @@ pub mod base{
             if (direction == 0&&y<speed)||(direction == 1&&x+speed>=self.width)||(direction==2&&y+speed>=self.height)||(direction==3&&x<speed){
                 active = false;
             }else if self.turn % 12 != 0 {
+
                 if direction == 0 {
                     let wanted_col = &mut cols[x];
-                    if (y as i16) - (speed as i16) < 0 {
-                        active = false;
-                    }
-
-                    
-                    for i in (sub_lim(y, speed))..(y) {
+                 //   if (y as i16) - (speed as i16) < 0 {
+                  //      active = false;
+                   // }
+                    for i in (y-speed)..y {
                         if *wanted_col >> i & 1 == 0 {
                             *wanted_col |= 2 ^ i as i128;
                             rows[i] |= 2 ^ x as i128;
@@ -94,15 +130,13 @@ pub mod base{
                             active = false;
                         }
                     }
-                
-
-                    y = sub_lim(y,speed);
+                    y -= speed;
 
                 } else if direction == 1 {
                     let wanted_row = &mut rows[y];
-                    if x + 1 + speed > self.width {
-                        active = false;
-                    }
+                   // if x + 1 + speed > self.width {
+                    //    active = false;
+                    //}
                     for i in (x + 1)..(x + 1 + speed) {
                         if *wanted_row >> i & 1 == 0 {
                             *wanted_row |= 2 ^ i as i128;
@@ -116,9 +150,9 @@ pub mod base{
                 } else if direction == 2 {
                     let wanted_col = &mut cols[x];
 
-                    if y + 1 + speed > self.height {
-                        active = false;
-                    }
+                 //   if y + 1 + speed > self.height {
+                  //      active = false;
+                   // }
                     for i in (y + 1)..(y + 1 + speed) {
                         if *wanted_col >> i & 1 == 0 {
                             *wanted_col |= 2 ^ i as i128;
@@ -130,20 +164,19 @@ pub mod base{
                     y += speed;
                 } else if direction == 3 {//offset von 1 nicht vergessen
                     let wanted_row = &mut rows[y];
-                    if( x as i16) - (speed as i16) < 0 {
-                        active = false;
-                    }else{
-
-                        for i in (sub_lim(x,  speed))..(x) {
-                            if *wanted_row >> i & 1 == 0 {
-                                *wanted_row |= 2 ^ i as i128;
-                                cols[i] |= 2 ^ y as i128;
-                            } else {
-                                active = false;
-                            }
+                   // if( x as i16) - (speed as i16) < 0 {
+                     //   active = false;
+                   // }else{
+                    for i in (x-speed)..x {
+                        if *wanted_row >> i & 1 == 0 {
+                            *wanted_row |= 2 ^ i as i128;
+                            cols[i] |= 2 ^ y as i128;
+                        } else {
+                            active = false;
                         }
                     }
-                    x = sub_lim(x,speed);
+                    //}
+                    x -= speed;
                     
                 }
             } else {
@@ -176,9 +209,9 @@ pub mod base{
                         active = false
                     }
                 }
-                if rows[y] >> x & 1 == 0 {
-                    rows[y] |= 2 ^ x as i128;
-                    cols[x] |= 2 ^ y as i128;
+                if rows[f2.1] >> f2.0 & 1 == 0 {
+                    rows[f2.1] |= 2 ^ f2.0 as i128;
+                    cols[f2.0] |= 2 ^ f2.1 as i128;
                 } else {
                     active = false
                 }
@@ -200,7 +233,7 @@ pub mod base{
             State {
                 rows: rows,
                 cols: cols,
-                turn: self.turn,
+                turn: self.turn+1,
                 max_player: self.max_player,
                 players: arr,
                 width: self.width,
