@@ -34,8 +34,8 @@ RUN python -m pip install ./src/spe_ed_rust/spe_ed_lib/spe_ed_rust-0.1.0-cp38-cp
 #RUN maturin build --release -m ./src/spe_ed_rust/Cargo.toml
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
-RUN useradd appuser && chown -R appuser /app
-USER appuser
+#RUN useradd appuser && chown -R appuser /app
+#USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["gunicorn", "--bind", "0.0.0.0:4200", "src.game:server"]
+CMD ["python3", "./src/websocket.py"]
