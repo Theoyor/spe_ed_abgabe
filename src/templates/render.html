@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    body{
+        font-family: Arial, Helvetica, sans-serif;
+        color: rgb(145, 61, 1);
+        font-weight: 300;
+    }
+    .wrapper{
+        display: grid;
+        grid-gap: 20px 20px;
+        grid-template-columns: auto auto auto auto;
+        grid-auto-rows: 240px;
+        
+
+    }
+
+    .stateContainer{    
+        width: 100%;
+        height: 100%;
+        border:1px solid rgb(65, 65, 65)  ;
+        box-shadow: 2px 2px 5px rgb(129, 129, 129);
+        border-radius: 3px;
+        display: flex;
+        align-content: center;
+    }
+
+    .status{
+        padding-left: 5px ;
+    }
+    canvas{
+        border-right: 1px solid rgb(114, 114, 114);
+    }
+    .player1{
+        color: red;
+    }
+    .player1_head{
+        color: maroon;
+    }
+    .player2{
+        color: lime;
+    }
+    .player2_head{
+        color: green;
+    }
+    .player3{
+        color: blue;
+    }
+    .player3_head{
+        color: navy;
+    }
+    .player4{
+        color: fuchsia;
+    }
+    .player4_head{
+        color: purple;
+    }
+    .player5{
+        color: yellow;
+    }
+    .player5_head{
+        color: olive;
+    }    
+    .player6{
+        color: aqua;
+    }   
+    .player6_head{
+        color: teal;
+    }
+    .dead{
+        color: black;
+    }
+    .unknown{
+        color: grey;
+    }
+
+
+    </style>
+
+
+</head>
+
+<body>
+    <h1>Spielverlauf</h1>
+    <div class="color_scheme">
+         <span class="player1">Spieler 1</span> <span class="player1_head">Head 1</span> 
+         <span class="player2">Spieler 2</span> <span class="player2_head">Head 2</span> 
+         <span class="player3">Spieler 3</span> <span class="player3_head">Head 3</span> 
+         <span class="player4">Spieler 4</span> <span class="player4_head">Head 4</span> 
+         <span class="player5">Spieler 5</span> <span class="player5_head">Head 5</span> 
+         <span class="player6">Spieler 6</span> <span class="player6_head">Head 6</span> 
+         <span class="dead">Dead</span> <span class="unknown">Unknown</span> 
+        </div>
+    <div id="wrapper" class="wrapper">
+
+    </div>
+
+
+    <script >
+
+
+
+    var statesString = "";  
+    var request = new XMLHttpRequest();
+    
+    request.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            statesString  = this.responseText;
+        }
+    };
+
+    request.open("GET", "/data_json", false);
+    request.send();
+    unpackStates(statesString);
+
+//hier kommt JSON-String rein
+
+function unpackStates(statesDoc){
+    const states = JSON.parse(statesDoc);
+    //Initialize layout
+    console.log(states);
+    var rowString = (10*states.game[1].height).toString().concat('px')
+    var columnString = ' ';
+    
+    
+    let y = 5;
+    for (let i = (states.game[1].width/10); i < 11; i++) {
+        
+        columnString = columnString.concat('auto ')
+        if(y == 1){
+            break;
+        }
+        y += 1; 
+    }
+    
+    document.getElementById('wrapper').style.gridAutoRows = rowString;
+    document.getElementById('wrapper').style.gridTemplateColumns = columnString;
+
+    
+    //console.log(states)
+    for (let i = 1; i < states.game.length; i++) {
+        unpackOneState(states.game[i], i);
+    }
+
+    
+}
+
+function unpackOneState(state, round){
+    //console.log(state);
+    var players = [];
+    
+    const arr = Object.entries(state.players);
+    console.log(arr);
+
+    arr.forEach(player => {
+        players = players.concat([{num: player[0], x:player[1].x,y:player[1].y, out: !player[1].active}])
+
+    });
+
+    
+    displayOne(state.cells, round, players ,state.width, state.height )
+}
+
+function displayOne(field, round, players, width, height){
+
+    var roundString = "Round: "
+    roundString = roundString.concat(round.toString());
+
+    var outString = "Out: "
+    players.forEach(player => {
+        if(player.out){
+            outString = outString.concat(player.num.toString());
+            outString = outString.concat(", ");
+        }
+        
+    });
+
+    const wrapper = document.getElementById("wrapper");
+
+    const container = document.createElement("div");
+    container.setAttribute("class", "stateContainer")
+    
+    const canvas = document.createElement("canvas");
+    
+    const status = document.createElement("div")
+    status.setAttribute("class", "status")
+
+    
+    const header = document.createElement("div");    
+
+    
+    header.appendChild(document.createTextNode(roundString));
+    status.appendChild(header)
+    status.appendChild(document.createTextNode(outString))
+
+    container.appendChild(canvas);
+    container.appendChild(status);
+    wrapper.appendChild(container);
+
+    canvas.width = 10*height;
+    canvas.height = 10*width;
+    const ctx = canvas.getContext("2d");
+
+    for (let y = 0; y < field.length; y++) {
+        for (let x = 0; x < field[y].length; x++) {
+            if(field[y][x] != 0){
+                switch (field[y][x]){
+                    case 1:
+                        ctx.fillStyle = "red";
+                        break;
+                    case 2:
+                        ctx.fillStyle = "lime";
+                        break;
+                    case 3:
+                        ctx.fillStyle = "blue";
+                        break;
+                    case 4:
+                        ctx.fillStyle = "fuchsia";
+                        break;
+                    case 5:
+                        ctx.fillStyle = "yellow";
+                        break;
+                    case 6:
+                        ctx.fillStyle = "aqua";
+                        break;
+                    default:
+                        ctx.fillStyle = "grey";
+                        break;
+                }
+                ctx.fillRect(x*10,y*10,10,10);
+            }
+        }
+        
+    }
+    //console.log(players);
+
+    players.forEach(player => {
+        switch (player.num){
+            case "1":
+                ctx.fillStyle = "maroon";
+                break;
+            case "2":
+                ctx.fillStyle = "green";
+                break;
+            case "3":
+                ctx.fillStyle = "navy";
+                break;
+            case "4":
+                ctx.fillStyle = "purple";
+                break;
+            case "5":
+                ctx.fillStyle = "olive";
+                break;
+            case "6":
+                ctx.fillStyle = "teal";
+                break;
+            default:
+                ctx.fillStyle = "black";
+                break;
+            }
+            
+        //console.log("hiiiii");
+        if(player.out){
+            ctx.fillStyle = "black"
+        }
+            ctx.fillRect(player.y*10,player.x*10,10,10);  
+        
+        
+    });
+
+    
+}
+
+
+
+
+
+    </script>
+</body>
+</html>

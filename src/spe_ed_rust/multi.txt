@@ -1,0 +1,80 @@
+ /*
+        let error_flag = Arc::new(Mutex::new(0));
+        //mov: change_nothing = 0, speed_up = 1, slow down = 2, turn_right = 3, turn_left = 4
+        let move_to_make2 = Arc::new(Mutex::new(0));
+        let max_move2 = Arc::new(Mutex::new(-1000));
+        let a2 = Arc::new(Mutex::new(-1000));
+        let mut teiler = 5/num_cpus::get();
+        let mut rest = 0;
+        if teiler != 0{
+           rest = 5 % num_cpus::get();
+        }
+        let mut handles =vec![];
+        let mut prev = 0;
+
+    
+        for z in 0..num_cpus::get(){
+            let error_flag = Arc::clone(&error_flag);
+            let move_to_make2 = Arc::clone(&move_to_make2);
+            let max_move2 = Arc::clone(&max_move2);
+            let a2 = Arc::clone(&a2);
+            let cloned_game_state = game_state.clone();
+
+            let handle = thread::spawn(move || {    
+                let mut erf = error_flag.lock().unwrap();
+                let mut mtm = move_to_make2.lock().unwrap();
+                let mut mm = max_move2.lock().unwrap();
+                let mut ah = a2.lock().unwrap();
+                let mut x2 = 0;
+                
+                if rest > 0 {
+                    x2 = prev + teiler + 2;
+                }
+                else {
+                    x2 = prev + teiler+1;
+                }
+
+                for i in prev..x2{
+                    let mut min_move:i16 = 1000;
+                    let mut b = 1000;
+                    for x in 0..6{
+                        if x == max_player || !cloned_game_state.players[x].active{
+                            continue;
+                        }
+                        let mut c :i16 = 0;
+                        match descend(max_player, x, depth-1, *ah, b, false, cloned_game_state.update_gameboard(i, max_player), return_time) {
+                            Ok(value) => {c = value;},
+                            Err(s) => {*erf = s}
+                        }
+                        min_move = cmp::min(min_move, c);
+                        b = min_move;
+                        if *ah<=b{
+                            break;
+                        }
+                    }
+                    if min_move >= *mm {
+                        *mtm = i;
+                        *mm = min_move;
+                        *ah = *mm;
+                    }
+                }
+            
+            });
+            if rest > 0{
+                rest -= 1;
+            }
+            handles.push(handle);
+        }
+        for handle in handles{
+            handle.join().unwrap();
+        }
+        */
+
+        /*
+        
+        if *error_flag.lock().unwrap() == 0 {
+            return Ok(*move_to_make2.lock().unwrap() as i8);
+        }else{
+            return Err(*error_flag.lock().unwrap());
+        }
+        */
