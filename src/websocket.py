@@ -35,15 +35,15 @@ async def play():
             print("server time: ",requests.get('https://msoll.de/spe_ed_time').content)
             state_json = await websocket.recv()
             state = json.loads(state_json)
-
-            newDeadline = datetime.strptime(state["deadline"], FMK) - diff
+            print("<", state)
+            print(state['deadline'])
+            newDeadline = datetime.strptime(state['deadline'].replace('-',':').replace('T',':').split('Z')[0], FMK) - diff
             deadlineTicks = (newDeadline-datetime(1970, 1, 1)).total_seconds()
 
             #with open('data.json', 'a') as f:
             #    f.write(',')
             #    f.write(json.dumps(state))
 
-            print("<", state)
             own_player = state["players"][str(state["you"])]
             if not state["running"] or not own_player["active"]:
                 break

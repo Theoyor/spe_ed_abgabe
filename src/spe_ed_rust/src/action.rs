@@ -9,11 +9,13 @@ pub mod action{
     pub fn iter_depth(max_player: usize, game_state: State, return_time: f32) ->i8{
         let mut move_to_make = 0;
         println!("rows:{},cols:{}",game_state.rows.len(),game_state.cols.len());
-        for i in 7..8 { //Maximum aufheben
+        for i in 5.. { //Maximum aufheben
             
             match start(max_player, i, game_state.clone(), &return_time) {
                 Ok(value) => { move_to_make = value;},
-                Err(s) => {return move_to_make;}
+                Err(s) => {
+                    println!("{}",i);
+                    return move_to_make;}
             }
         }
         println!("cords pre: {},{}",game_state.players[max_player-1].x,game_state.players[max_player-1].y);
@@ -75,6 +77,7 @@ pub mod action{
         let start = SystemTime::now();
         let since_the_epoch = start.duration_since(UNIX_EPOCH).expect("Time went backwards").as_secs_f32();
         if return_time-since_the_epoch < 1.0 {
+            println!("{}",return_time-since_the_epoch);
             return Err(42);
         }
         //let g = 0.7*(*return_time as f64);
