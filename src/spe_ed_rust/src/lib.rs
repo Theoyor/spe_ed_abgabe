@@ -34,8 +34,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
             
         let mut p = Player{
             id : 1,
-            x: parsed["1"]["x"].as_usize().unwrap(),
-            y: parsed["1"]["y"].as_usize().unwrap(),
+            x: parsed["1"]["x"].as_i8().unwrap() as usize,
+            y: parsed["1"]["y"].as_i8().unwrap() as usize,
             direction : parsed["1"]["direction"].as_i8().unwrap(),
             speed : parsed["1"]["speed"].as_usize().unwrap(),
             active: parsed["1"]["active"].as_bool().unwrap(),
@@ -45,8 +45,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         
         p = Player{
             id : 2,
-            x: parsed["2"]["x"].as_usize().unwrap(),
-            y: parsed["2"]["y"].as_usize().unwrap(),
+            x: parsed["2"]["x"].as_i8().unwrap() as usize,
+            y: parsed["2"]["y"].as_i8().unwrap() as usize,
             direction : parsed["2"]["direction"].as_i8().unwrap(),
             speed : parsed["2"]["speed"].as_usize().unwrap(),
             active: parsed["2"]["active"].as_bool().unwrap(),
@@ -56,8 +56,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         
          p = Player{
             id : 3,
-            x: parsed["3"]["x"].as_usize().unwrap(),
-            y: parsed["3"]["y"].as_usize().unwrap(),
+            x: parsed["3"]["x"].as_i8().unwrap() as usize,
+            y: parsed["3"]["y"].as_i8().unwrap() as usize,
             direction : parsed["3"]["direction"].as_i8().unwrap(),
             speed : parsed["3"]["speed"].as_usize().unwrap(),
             active: parsed["3"]["active"].as_bool().unwrap(),
@@ -67,8 +67,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         
         p = Player{
             id : 4,
-            x: parsed["4"]["x"].as_usize().unwrap(),
-            y: parsed["4"]["y"].as_usize().unwrap(),
+            x: parsed["4"]["x"].as_i8().unwrap() as usize,
+            y: parsed["4"]["y"].as_i8().unwrap() as usize,
             direction : parsed["4"]["direction"].as_i8().unwrap(),
             speed : parsed["4"]["speed"].as_usize().unwrap(),
             active: parsed["4"]["active"].as_bool().unwrap(),
@@ -78,8 +78,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         
         p = Player{
             id : 5,
-            x: parsed["5"]["x"].as_usize().unwrap(),
-            y: parsed["5"]["y"].as_usize().unwrap(),
+            x: parsed["5"]["x"].as_i8().unwrap() as usize,
+            y: parsed["5"]["y"].as_i8().unwrap() as usize,
             direction : parsed["5"]["direction"].as_i8().unwrap(),
             speed : parsed["5"]["speed"].as_usize().unwrap(),
             active: parsed["5"]["active"].as_bool().unwrap(),
@@ -89,8 +89,8 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         
         p = Player{
             id : 6,
-            x: parsed["6"]["x"].as_usize().unwrap(),
-            y: parsed["6"]["y"].as_usize().unwrap(),
+            x: parsed["6"]["x"].as_i8().unwrap() as usize,
+            y: parsed["6"]["y"].as_i8().unwrap() as usize,
             direction : parsed["6"]["direction"].as_i8().unwrap(),
             speed : parsed["6"]["speed"].as_usize().unwrap(),
             active: parsed["6"]["active"].as_bool().unwrap(),

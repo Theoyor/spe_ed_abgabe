@@ -20,9 +20,10 @@ async def play():
         print("Waiting for initial state...", flush=True)
         serv_time = requests.get('https://msoll.de/spe_ed_time')
         print(serv_time.content)
+        rd = 0
         while True:
-            rd = 0
             print("---------round:",rd,"----------")
+            print(requests.get('https://msoll.de/spe_ed_time').content)
             state_json = await websocket.recv()
             state = json.loads(state_json)
             #with open('data.json', 'a') as f:
@@ -39,6 +40,7 @@ async def play():
             action_json = json.dumps({"action": action})
             await websocket.send(action_json)
             rd += 1
+            print("abgabe: ",requests.get('https://msoll.de/spe_ed_time').content)
         #f = open('data.json', 'a')
         #f.write(']}')
         #f.close()
