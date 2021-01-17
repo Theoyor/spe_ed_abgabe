@@ -11,10 +11,9 @@ name = "spe_ed_lib"
 crate-type = ["cdylib"]
 
 [dependencies]
-num_cpus = "1.13.0"
 rand = "0.8.1"
 json = "0.12.4"
-
+num = "0.3.1"
 
 [dependencies.pyo3]
 version = "0.13.0"

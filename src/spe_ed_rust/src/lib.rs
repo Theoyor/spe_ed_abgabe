@@ -6,7 +6,6 @@ mod base;
 use base::base::{Player, State};
 mod action;
 use action::action as act;
-use num_cpus;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use json::parse;
@@ -17,6 +16,7 @@ use json::parse;
 /// Formats the sum of two numbers as string.
 #[pyfunction]
 fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players:String, width: usize, height: usize, deadline_ticks: f32) -> PyResult<i8> {
+    // Nimmt die Pythonwerte entgegen und wandelt es in unseren Ruststruct um
     let parsed =  parse(&players).unwrap();
     let pl = Player{
         id : 6,
@@ -107,26 +107,13 @@ fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players
         width,
         height
     };
-     
-    //return time richtig setzen
+    // Aufruf des "richtigen" Algortihmus
     Ok(act::iter_depth(max_player, game_state, deadline_ticks))
-    
-    
 }
 
 /// A Python module implemented in Rust.
 #[pymodule]
 fn spe_ed_lib(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(accept, m)?)?;
-
     Ok(())
-}
-
-
-
-
- 
-pub fn main() {
-    let cpus = num_cpus::get();
-    print!("CPUs: {} \n",cpus);
 }
