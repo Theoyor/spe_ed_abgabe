@@ -7,13 +7,12 @@ pub mod action{
     // Iterative Funktion zum Aufrufen der rekursiven Funktion
     // Rückgabewert wird für alle Tiefen einzeln berechnet
     // Wenn die Zeit zu knapp wird, gebe letztes vollständig berechnetes Ergebnis zurück
+    // Die Zeitberechnung hat kurzfristig versagt, daher immer mit Suchtiefe 12, die sollte immer schnell genug sein.
     pub fn iter_depth(max_player: usize, game_state: State, return_time: f32) ->i8{
         let mut move_to_make = 0;
-        let mut i = 4;
-        loop {
+        for i in 12..13 {
             match start(max_player, i, game_state.clone(), &return_time) {
                 Ok(value) => {
-                    i += 1;
                     move_to_make = value;},
                 Err(s) => {
                     println!("Erreichte Tiefe: {}, fehler: {}", i-1, s);
@@ -78,6 +77,7 @@ pub mod action{
         if depth == 0{
             return Ok(game_state.spielstands_bewertung(max_player, min_player));
         }
+        /*
         let start = SystemTime::now();
         let since_the_epoch = start.duration_since(UNIX_EPOCH).expect("Time went backwards").as_secs_f32();
         // Wenn weniger als 1 Sekunde verbleibend abbrechen
@@ -87,6 +87,7 @@ pub mod action{
             println!("Zeit abgelaufen, differenz : {}",return_time-since_the_epoch);
             return Err(42);
         }
+        */
         // Wenn maximiert wird
         if max{
             let mut a2 :i16 = a;

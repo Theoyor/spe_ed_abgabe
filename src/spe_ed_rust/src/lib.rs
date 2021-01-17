@@ -15,7 +15,7 @@ use json::parse;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i8, max_player:usize, players:String, width: usize, height: usize, deadline_ticks: f32) -> PyResult<i8> {
+fn accept( rows: Vec<i128>, cols: Vec<i128>, turn: i16, max_player:usize, players:String, width: usize, height: usize, deadline_ticks: f32) -> PyResult<i8> {
     // Nimmt die Pythonwerte entgegen und wandelt es in unseren Ruststruct um
     let parsed =  parse(&players).unwrap();
     let pl = Player{

@@ -26,14 +26,13 @@ async def play():
         serv_time = serv_t[3] + serv_t[7]
         time_diff = time - datetime.strptime(serv_time, FMT)
 
-        rd = 0
+        rd = 1
 
         while True:
             print("---------round:",rd,"----------")
             print("server time: ",requests.get('https://msoll.de/spe_ed_time').content)
             state_json = await websocket.recv()
             state = json.loads(state_json)
-            print("deadline: {}",state["deadline"]);
             print(">",state)
             newDeadline = datetime.strptime(state['deadline'].replace('-',':').replace('T',':').split('Z')[0], FMK) - time_diff
             deadlineTicks = (newDeadline-datetime(1970, 1, 1)).total_seconds()
@@ -42,7 +41,7 @@ async def play():
             if not state["running"] or not own_player["active"]:
                 break
             # Starte eigenen Algorithmus
-            action = start_rek(state, rd, deadlineTicks)
+            action = start_rek(state, 2*rd, deadlineTicks)
             print(">", action)
             action_json = json.dumps({"action": action})
             await websocket.send(action_json)

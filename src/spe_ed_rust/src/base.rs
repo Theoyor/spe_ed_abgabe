@@ -21,7 +21,7 @@ pub mod base{
     pub struct  State{
         pub rows :  Vec<i128>,
         pub cols :  Vec<i128>,
-        pub turn : i8,
+        pub turn : i16,
         pub max_player : usize,
         pub players : [Player;6],
         pub width : usize,

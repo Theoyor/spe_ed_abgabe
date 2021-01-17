@@ -10,6 +10,10 @@ def start_rek(dictio, turn, deadlineTicks):
     for i in range(1, 7):
         if str(i) in dictio["players"]:
             plays[str(i)] = dictio["players"][str(i)]
+            if plays[str(i)]["x"] < 0 or plays[str(i)]["x"] >= dictio["width"]:
+                plays[str(i)]["x"] == 0
+            if plays[str(i)]["y"] < 0 or plays[str(i)]["y"] >= dictio["height"]:
+                plays[str(i)]["y"] == 0
         else:
             plays[str(i)] = {"x":0,
                              "y":0,
